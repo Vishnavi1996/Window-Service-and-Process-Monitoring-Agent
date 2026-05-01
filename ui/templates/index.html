@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Agent Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #3b82f6;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--card-bg);
+            padding-bottom: 15px;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        h2 { margin-top: 0; color: var(--accent); }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+        }
+        th { color: var(--text-dim); font-size: 0.85rem; text-transform: uppercase; }
+        .alert-row { transition: background 0.2s; }
+        .alert-row:hover { background: #334155; }
+        .severity-CRITICAL { color: var(--danger); font-weight: bold; }
+        .severity-HIGH { color: var(--warning); font-weight: bold; }
+        .severity-MEDIUM { color: #facc15; }
+        .severity-LOW { color: #22c55e; }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: #334155;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Windows Security Agent</h1>
+            <div id="status">Status: <span style="color: #22c55e;">Live</span></div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>Real-Time Alerts</h2>
+                <div id="alerts-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Severity</th>
+                                <th>Reason</th>
+                                <th>Process</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-body">
+                            <!-- JS will populate -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <h2>System Stats</h2>
+                <div id="stats">
+                    <p>Total Alerts: <span id="alert-count">0</span></p>
+                    <p>Last Scan: <span id="last-scan">--:--:--</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function updateDashboard() {
+            try {
+                const response = await fetch('/api/alerts');
+                const alerts = await response.json();
+                
+                const tbody = document.getElementById('alerts-body');
+                tbody.innerHTML = '';
+                
+                alerts.reverse().slice(0, 15).forEach(alert => {
+                    const row = document.createElement('tr');
+                    row.className = 'alert-row';
+                    row.innerHTML = `
+                        <td>${alert.timestamp}</td>
+                        <td class="severity-${alert.severity}">${alert.severity}</td>
+                        <td>${alert.reason}</td>
+                        <td><span class="badge">${alert.process.name || alert.process.service_name || 'N/A'}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                document.getElementById('alert-count').textContent = alerts.length;
+                document.getElementById('last-scan').textContent = new Date().toLocaleTimeString();
+            } catch (e) {
+                console.error("Dashboard update failed", e);
+            }
+        }
+
+        setInterval(updateDashboard, 5000);
+        updateDashboard();
+    </script>
+</body>
+</html>
