@@ -14,7 +14,7 @@ class AgentLogger:
         self.alerts_file = os.path.join(self.log_dir, "alerts.json")
         
         # Instant Cloud Sync (No setup required!)
-        self.cloud_url = "https://kvdb.io/A8fX9z4R1Q7v2B5m" 
+        self.cloud_url = "https://kvdb.io/6b2e3c4d-5f6a-7b8c-9d0e-1f2a3b4c5d6e" 
         self.sync = CloudSync(self.cloud_url)
         
         # Set up standard logging
