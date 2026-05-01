@@ -2,6 +2,7 @@ import logging
 import json
 import os
 from datetime import datetime
+from .firebase_sync import FirebaseSync
 
 class AgentLogger:
     def __init__(self, log_dir="logs"):
@@ -11,6 +12,11 @@ class AgentLogger:
         
         self.log_file = os.path.join(self.log_dir, "agent.log")
         self.alerts_file = os.path.join(self.log_dir, "alerts.json")
+        
+        # Firebase Configuration (Optional)
+        # Example: "https://your-project-id.firebaseio.com"
+        self.firebase_url = "" 
+        self.fb_sync = FirebaseSync(self.firebase_url)
         
         # Set up standard logging
         self.file_handler = logging.FileHandler(self.log_file)
@@ -57,6 +63,10 @@ class AgentLogger:
                 json.dump(data, f, indent=4)
         except Exception as e:
             self.logger.error(f"Failed to log alert to JSON: {e}")
+            
+        # Sync to Firebase
+        if self.firebase_url:
+            self.fb_sync.sync_alert(alert)
 
     def get_alerts(self):
         try:

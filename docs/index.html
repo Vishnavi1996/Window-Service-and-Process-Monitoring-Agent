@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Agent - Portfolio Demo</title>
+    <title>Security Agent - Live Cloud Dashboard</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -30,8 +30,8 @@
             border-bottom: 1px solid var(--card-bg);
             padding-bottom: 15px;
         }
-        .demo-banner {
-            background: var(--accent);
+        .cloud-banner {
+            background: #10b981;
             color: white;
             padding: 10px;
             text-align: center;
@@ -56,69 +56,109 @@
         th { color: var(--text-dim); font-size: 0.85rem; text-transform: uppercase; }
         .severity-CRITICAL { color: var(--danger); font-weight: bold; }
         .severity-HIGH { color: var(--warning); font-weight: bold; }
+        .severity-MEDIUM { color: #facc15; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; background: #334155; }
+        #no-data { padding: 40px; text-align: center; color: var(--text-dim); }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="demo-banner">
-            🚀 PORTFOLIO DEMO: This is a static preview of the Windows Security Agent UI.
+        <div class="cloud-banner" id="banner">
+            ☁️ CLOUD LIVE: Connected to Firebase Real-Time Database.
         </div>
         <header>
             <h1>🛡️ Windows Security Agent</h1>
-            <div id="status">Status: <span style="color: #22c55e;">System Active (Simulation)</span></div>
+            <div id="status">Status: <span id="status-text" style="color: #22c55e;">Live Feed</span></div>
         </header>
 
         <div class="dashboard-grid">
             <div class="card">
-                <h2>Security Alert Feed</h2>
+                <h2>Real-Time Alert Feed</h2>
                 <table>
                     <thead>
                         <tr>
                             <th>Time</th>
                             <th>Severity</th>
                             <th>Reason</th>
-                            <th>Process</th>
+                            <th>Target</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>2026-05-01 18:20:07</td>
-                            <td class="severity-HIGH">HIGH</td>
-                            <td>Process name mimicking detected: conhost.exe</td>
-                            <td><span class="badge">conhost.exe</span></td>
-                        </tr>
-                        <tr>
-                            <td>2026-05-01 18:15:32</td>
-                            <td class="severity-CRITICAL">CRITICAL</td>
-                            <td>Service running from Temp folder</td>
-                            <td><span class="badge">svch0st.exe</span></td>
-                        </tr>
-                        <tr>
-                            <td>2026-05-01 18:10:12</td>
-                            <td class="severity-HIGH">HIGH</td>
-                            <td>Suspicious chain: winword.exe → powershell.exe</td>
-                            <td><span class="badge">powershell.exe</span></td>
-                        </tr>
+                    <tbody id="alerts-body">
+                        <!-- Data will be injected here -->
                     </tbody>
                 </table>
+                <div id="no-data" style="display: none;">No alerts detected yet. Waiting for agent...</div>
             </div>
             <div class="card">
-                <h2>Project Information</h2>
-                <p><strong>Version:</strong> v1.0.0</p>
-                <p><strong>Architecture:</strong> Python / Flask / psutil</p>
-                <p><strong>Features:</strong></p>
+                <h2>Project Info</h2>
+                <p><strong>Deployment:</strong> GitHub Pages + Firebase</p>
+                <p><strong>Status:</strong> <span id="sync-status">Scanning...</span></p>
+                <hr style="border-color: #334155;">
+                <h3>System Capabilities</h3>
                 <ul>
-                    <li>Real-time Process Monitoring</li>
-                    <li>Parent-Child Relationship Tracking</li>
-                    <li>Service Auditing & Persistence Detection</li>
-                    <li>Automated PDF/JSON Reporting</li>
+                    <li>Process Tree Analysis</li>
+                    <li>Mimicking Detection</li>
+                    <li>Service Auditing</li>
                 </ul>
-                <button style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;">
-                    Download PDF Report (Sample)
-                </button>
             </div>
         </div>
     </div>
+
+    <script>
+        // CONFIGURATION: Replace with your Firebase Database URL
+        // Example: "https://your-project.firebaseio.com"
+        const FIREBASE_URL = ""; 
+
+        async function fetchAlerts() {
+            if (!FIREBASE_URL) {
+                document.getElementById('banner').innerHTML = "⚠️ CONFIG REQUIRED: Set FIREBASE_URL in docs/index.html to enable live cloud sync.";
+                document.getElementById('banner').style.background = "#f59e0b";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${FIREBASE_URL}/alerts.json`);
+                const data = await response.json();
+                
+                const tbody = document.getElementById('alerts-body');
+                tbody.innerHTML = '';
+
+                if (!data) {
+                    document.getElementById('no-data').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('no-data').style.display = 'none';
+
+                // Firebase returns an object of objects, convert to array
+                const alerts = Object.values(data);
+                
+                alerts.reverse().slice(0, 20).forEach(alert => {
+                    const row = document.createElement('tr');
+                    const target = alert.process.name || alert.process.service_name || 'Unknown';
+                    row.innerHTML = `
+                        <td>${alert.timestamp}</td>
+                        <td class="severity-${alert.severity}">${alert.severity}</td>
+                        <td>${alert.reason}</td>
+                        <td><span class="badge">${target}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                document.getElementById('sync-status').textContent = "Synced: " + new Date().toLocaleTimeString();
+            } catch (e) {
+                console.error("Firebase fetch failed", e);
+            }
+        }
+
+        if (FIREBASE_URL) {
+            setInterval(fetchAlerts, 5000);
+            fetchAlerts();
+        } else {
+            // Show some mock data if no URL is provided
+            document.getElementById('banner').innerHTML = "⚠️ CONFIG REQUIRED: Follow the instructions to set up your Firebase Live URL.";
+            document.getElementById('banner').style.background = "#ef4444";
+        }
+    </script>
 </body>
 </html>
