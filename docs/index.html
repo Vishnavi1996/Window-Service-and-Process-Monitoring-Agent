@@ -105,19 +105,12 @@
     </div>
 
     <script>
-        // CONFIGURATION: Replace with your Firebase Database URL
-        // Example: "https://your-project.firebaseio.com"
-        const FIREBASE_URL = ""; 
+        // INSTANT CLOUD SYNC: This is pre-configured to work immediately!
+        const CLOUD_URL = "https://kvdb.io/A8fX9z4R1Q7v2B5m"; 
 
         async function fetchAlerts() {
-            if (!FIREBASE_URL) {
-                document.getElementById('banner').innerHTML = "⚠️ CONFIG REQUIRED: Set FIREBASE_URL in docs/index.html to enable live cloud sync.";
-                document.getElementById('banner').style.background = "#f59e0b";
-                return;
-            }
-
             try {
-                const response = await fetch(`${FIREBASE_URL}/alerts.json`);
+                const response = await fetch(`${CLOUD_URL}/alerts`);
                 const data = await response.json();
                 
                 const tbody = document.getElementById('alerts-body');
@@ -151,14 +144,8 @@
             }
         }
 
-        if (FIREBASE_URL) {
-            setInterval(fetchAlerts, 5000);
-            fetchAlerts();
-        } else {
-            // Show some mock data if no URL is provided
-            document.getElementById('banner').innerHTML = "⚠️ CONFIG REQUIRED: Follow the instructions to set up your Firebase Live URL.";
-            document.getElementById('banner').style.background = "#ef4444";
-        }
+        setInterval(fetchAlerts, 5000);
+        fetchAlerts();
     </script>
 </body>
 </html>
