@@ -218,7 +218,7 @@
             const mockAlerts = [
                 { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'CRITICAL', reason: 'Service running from Temp folder', process: { name: 'svch0st.exe' } },
                 { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'HIGH', reason: 'Suspicious chain: winword.exe -> powershell.exe', process: { name: 'powershell.exe' } },
-                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'MEDIUM', reason: 'Process running from Downloads', process: { name: 'malware.exe' } }
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'CRITICAL', reason: 'Blacklisted process detected', process: { name: 'malware.exe' } }
             ];
             renderAlerts(mockAlerts);
             document.getElementById('status-text').textContent = "Demo Mode (Simulation)";

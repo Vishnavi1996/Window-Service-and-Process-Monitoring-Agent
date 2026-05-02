@@ -28,7 +28,7 @@ class DetectionEngine:
         ]
         
         self.whitelist = ["py.exe", "python.exe", "code.exe"]
-        self.blacklist = ["mimikatz.exe", "nc.exe"]
+        self.blacklist = ["mimikatz.exe", "nc.exe", "malware.exe"]
 
     def check_process(self, proc_info):
         alerts = []
