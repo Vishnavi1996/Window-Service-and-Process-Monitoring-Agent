@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Agent - Cloud Dashboard</title>
+    <title>Security Agent - Live Internship Dashboard</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -14,6 +15,7 @@
             --danger: #ef4444;
             --warning: #f59e0b;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -21,7 +23,12 @@
             margin: 0;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         header {
             display: flex;
             justify-content: space-between;
@@ -30,105 +37,197 @@
             border-bottom: 1px solid var(--card-bg);
             padding-bottom: 15px;
         }
+
+        .banner {
+            background: #10b981;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 20px;
         }
+
         .card {
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
-        h2 { margin-top: 0; color: var(--accent); }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #334155; }
-        th { color: var(--text-dim); font-size: 0.85rem; text-transform: uppercase; }
-        .alert-row { transition: background 0.2s; }
-        .alert-row:hover { background: #334155; }
-        .severity-CRITICAL { color: var(--danger); font-weight: bold; }
-        .severity-HIGH { color: var(--warning); font-weight: bold; }
-        .severity-MEDIUM { color: #facc15; }
-        .severity-LOW { color: #22c55e; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; background: #334155; }
+
+        h2 {
+            margin-top: 0;
+            color: var(--accent);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .alert-row {
+            transition: background 0.2s;
+        }
+
+        .alert-row:hover {
+            background: #334155;
+        }
+
+        .severity-CRITICAL {
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .severity-HIGH {
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        .severity-MEDIUM {
+            color: #facc15;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: #334155;
+        }
+
+        .btn-demo {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
+        <div class="banner">
+            🛡️ LIVE SECURITY MONITORING ACTIVE
+            <button class="btn-demo" onclick="runDemo()">Run Simulation Demo</button>
+        </div>
         <header>
             <h1>🛡️ Windows Security Agent</h1>
-            <div id="status">Status: <span id="status-text" style="color: #22c55e;">Cloud Live</span></div>
+            <div id="status">Status: <span id="status-text" style="color: #22c55e;">Cloud Connected</span></div>
         </header>
 
         <div class="dashboard-grid">
             <div class="card">
-                <h2>Real-Time Alerts</h2>
-                <div id="alerts-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Time</th>
-                                <th>Severity</th>
-                                <th>Reason</th>
-                                <th>Process</th>
-                            </tr>
-                        </thead>
-                        <tbody id="alerts-body">
-                            <!-- JS will populate -->
-                        </tbody>
-                    </table>
+                <h2>Real-Time Alert Feed</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Severity</th>
+                            <th>Reason</th>
+                            <th>Process</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alerts-body">
+                        <!-- Alerts will appear here -->
+                    </tbody>
+                </table>
+                <div id="no-data" style="padding: 40px; text-align: center; color: var(--text-dim);">
+                    Waiting for agent data... (Run the script locally to see your real-time results)
                 </div>
             </div>
             <div class="card">
-                <h2>System Stats</h2>
-                <div id="stats">
-                    <p>Total Alerts: <span id="alert-count">0</span></p>
-                    <p>Last Sync: <span id="last-scan">--:--:--</span></p>
-                </div>
-                <hr style="border-color: #334155; margin: 20px 0;">
-                <p style="color: var(--text-dim); font-size: 0.9rem;">
-                    ☁️ This dashboard is connected via a secure cloud bridge to your local agent.
+                <h2>Project Information</h2>
+                <p><strong>Project:</strong> Windows Monitoring Agent</p>
+                <p><strong>Stats:</strong> <span id="alert-count">0</span> Alerts Detected</p>
+                <hr style="border-color: #334155;">
+                <p style="font-size: 0.9rem; color: var(--text-dim);">
+                    This agent uses Python, psutil, and Flask to monitor suspicious activity and syncs it to this cloud
+                    dashboard via a secure bridge.
                 </p>
             </div>
         </div>
     </div>
 
     <script>
-        const CLOUD_URL = "https://kvdb.io/6b2e3c4d-5f6a-7b8c-9d0e-1f2a3b4c5d6e"; 
+        const CLOUD_URL = "https://kvdb.io/security_agent_vishnavi_v2/alerts";
 
         async function updateDashboard() {
             try {
-                const response = await fetch(`${CLOUD_URL}/alerts`);
+                const response = await fetch(CLOUD_URL);
+                if (!response.ok) throw new Error("No data");
                 const alerts = await response.json();
-                
-                const tbody = document.getElementById('alerts-body');
-                tbody.innerHTML = '';
-
-                if (!alerts) return;
-                
-                alerts.reverse().slice(0, 15).forEach(alert => {
-                    const row = document.createElement('tr');
-                    row.className = 'alert-row';
-                    const target = alert.process.name || alert.process.service_name || 'N/A';
-                    row.innerHTML = `
-                        <td>${alert.timestamp}</td>
-                        <td class="severity-${alert.severity}">${alert.severity}</td>
-                        <td>${alert.reason}</td>
-                        <td><span class="badge">${target}</span></td>
-                    `;
-                    tbody.appendChild(row);
-                });
-
-                document.getElementById('alert-count').textContent = alerts.length;
-                document.getElementById('last-scan').textContent = new Date().toLocaleTimeString();
+                renderAlerts(alerts);
             } catch (e) {
-                console.error("Dashboard update failed", e);
+                console.log("Waiting for cloud data...");
             }
+        }
+
+        function renderAlerts(alerts) {
+            const tbody = document.getElementById('alerts-body');
+            const noData = document.getElementById('no-data');
+
+            if (!alerts || alerts.length === 0) {
+                noData.style.display = 'block';
+                return;
+            }
+
+            noData.style.display = 'none';
+            tbody.innerHTML = '';
+            alerts.reverse().slice(0, 15).forEach(alert => {
+                const row = document.createElement('tr');
+                row.className = 'alert-row';
+                const target = alert.process.name || alert.process.service_name || 'System';
+                row.innerHTML = `
+                    <td>${alert.timestamp}</td>
+                    <td class="severity-${alert.severity}">${alert.severity}</td>
+                    <td>${alert.reason}</td>
+                    <td><span class="badge">${target}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+            document.getElementById('alert-count').textContent = alerts.length;
+        }
+
+        function runDemo() {
+            const mockAlerts = [
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'CRITICAL', reason: 'Service running from Temp folder', process: { name: 'svch0st.exe' } },
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'HIGH', reason: 'Suspicious chain: winword.exe -> powershell.exe', process: { name: 'powershell.exe' } },
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), severity: 'MEDIUM', reason: 'Process running from Downloads', process: { name: 'malware.exe' } }
+            ];
+            renderAlerts(mockAlerts);
+            document.getElementById('status-text').textContent = "Demo Mode (Simulation)";
+            document.getElementById('status-text').style.color = "#3b82f6";
         }
 
         setInterval(updateDashboard, 5000);
         updateDashboard();
     </script>
 </body>
+
 </html>
